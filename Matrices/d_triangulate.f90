@@ -1,4 +1,4 @@
-Subroutine triangulate(A, n)
+Subroutine d_triangulate(A, n)
 	Implicit None
 	
 	Integer, Intent(In) :: n
@@ -17,4 +17,4 @@ Subroutine triangulate(A, n)
 		A = tmp
 	End Do
 	
-End Subroutine triangulate
+End Subroutine d_triangulate
