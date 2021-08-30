@@ -1,16 +1,20 @@
 Program Test
 	Implicit None	
 	Double Precision, Dimension(:, :), Allocatable :: A
-	Integer :: n
-	Double Precision :: ans
+	Double Precision, Dimension(:, :), Allocatable :: ans
+	Integer :: n, i, ierr
+	
 	n = 4
 	Allocate(A(n,n))
-	A(1, :) = (/1, -2, 1, 1/)
-	A(2, :) = (/1, -1, 1, 1/)
-	A(3, :) = (/-3, 0, 1, -2/)
-	A(4, :) = (/1, -4, 0, 6/)	
-	Call det(A, n, ans)
-	Write(*,*) ans
+	Allocate(ans(n,n))
+	A(1, :) = (/4, 3, 1, 9/)
+	A(2, :) = (/5, 6, 7, 3/)
+	A(3, :) = (/1, 2, 6, 12/)
+	A(4, :) = (/3, 8, 7, 4/)	
+	Call inv(A, n, ans, ierr)
+	Do i = 1, n
+		Write(*,'(4F8.4)') ans(i, :)
+	End Do
 End Program Test
 
 Subroutine det(A, n, ans)
@@ -55,3 +59,68 @@ Subroutine triangulate(A, n)
 	End Do
 	
 End Subroutine triangulate
+
+Subroutine minors(A, n, ans)
+	Implicit None
+	
+	Integer, Intent(In) :: n
+	Double Precision, Dimension(n, n), Intent(InOut) :: A
+	Double Precision, Dimension(n, n), Intent(Out) :: ans
+	Double Precision, Dimension(n-1, n-1):: tmp
+	Integer :: i, j, p, q
+	
+	Do i = 1, n
+		Do j = 1, n
+			tmp = A([(p, p=1,i-1), (p, p=i+1,n)], [(p, p=1,j-1), (p, p=j+1,n)])
+			Call det(tmp, n-1, ans(i, j))
+		End Do
+	End Do
+	
+End Subroutine minors
+
+Subroutine trans(A, n, ans)
+	Implicit None
+	
+	Integer, Intent(In) :: n
+	Double Precision, Dimension(n, n), Intent(InOut) :: A
+	Double Precision, Dimension(n, n), Intent(Out) :: ans
+	
+	Integer :: i, j
+	
+	Do i = 1, n
+		Do j = 1, n
+			ans(i, j) = A(j, i)
+		End Do
+	End Do
+End Subroutine trans
+
+Subroutine inv(A, n, ans, ierr)
+	Implicit None
+	
+	Integer, Intent(In) :: n
+	Double Precision, Dimension(n, n), Intent(InOut) :: A
+	Double Precision, Dimension(n, n), Intent(Out) :: ans
+	Integer, Intent(Out) :: ierr
+	Double Precision, Dimension(n, n) :: tmp, tmp2
+	Double Precision :: tmp_det
+	
+	Integer :: i, j, p, q
+	
+	ierr = 0
+	
+	Call det(A, n, tmp_det)
+	If (tmp_det .EQ. 0.0) Then
+		ierr = 1
+		ans = 0.0
+		Return
+	End If
+	
+	Call minors(A, n, tmp)
+	Call trans(tmp, n, tmp2)		
+	
+	Do i = 1, n
+		Do j = 1, n
+			ans(i, j) = (-1) ** (i+j) * tmp2(i, j) / tmp_det
+		End Do
+	End Do
+End Subroutine inv
