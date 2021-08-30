@@ -1,10 +1,10 @@
-Subroutine i_triangulate(A, n)
+Subroutine triangulate(A, n)
 	Implicit None
 	
 	Integer, Intent(In) :: n
-	Integer, Dimension(n, n), Intent(InOut) :: A
+	Double Precision, Dimension(n, n), Intent(InOut) :: A
 	
-	Integer, Dimension(n, n):: tmp
+	Double Precision, Dimension(n, n):: tmp
 	Integer :: i, j, k
 	
 	tmp = A
@@ -17,4 +17,4 @@ Subroutine i_triangulate(A, n)
 		A = tmp
 	End Do
 	
-End Subroutine i_triangulate
+End Subroutine triangulate
