@@ -1,4 +1,4 @@
-Subroutine d_det(A, n, ans)
+Subroutine det(A, n, ans)
 	Implicit None
 	
 	Integer, Intent(In) :: n
@@ -17,4 +17,4 @@ Subroutine d_det(A, n, ans)
 	
 	If (IsNan(ans)) ans = 0.0
 			
-End Subroutine d_det
+End Subroutine det
