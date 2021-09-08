@@ -15,6 +15,7 @@ Program Test
 	Do i = 1, n
 		Write(*,'(4F8.4)') ans(i, :)
 	End Do
+	
 End Program Test
 
 Subroutine det(A, n, ans)
